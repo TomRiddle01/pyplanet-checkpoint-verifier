@@ -1,0 +1,5 @@
+{% extends 'core.views/generics/widget.xml' %}
+
+{% block content %}
+    <script><!--{% include 'checkcheck/event_injection.Script.Txt' %}--></script>
+{% endblock %}

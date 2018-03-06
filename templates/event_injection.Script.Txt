@@ -1,0 +1,63 @@
+//Script for generating a clock in the pyplanet interface
+#Include "TextLib" as TextLib
+#Include "MathLib" as MathLib
+
+Vec3 GetNearestWaypoint(Vec3 _PlayerPos) {
+    declare Vec3 CheckpointPos;
+    declare Real[Vec3] Distances;
+
+    foreach (Pos in MapCheckpointPos) {
+        Distances[Pos] = MathLib::Distance(_PlayerPos, Pos);
+    }
+
+    // Finish lines are listed separately (includes StartFinish)
+    foreach (Pos in MapFinishLinePos) {
+        Distances[Pos] = MathLib::Distance(_PlayerPos, Pos);
+    }
+
+    // Let's sort checkpoints by their distance to the player
+    Distances = Distances.sort();
+
+    /**
+     *    We need to use foreach, since there's no other way
+     *    to get 1st element in array with custom key
+     */
+    foreach (Pos => Distance in Distances) {
+        return Pos;
+    }
+    
+    // This is required due how compilator and functions work
+    return Vec3;
+}
+
+main() {
+    log("restartinggggg!!!");
+    declare CMlLabel LabelLocalTime <=> (Page.GetFirstChild("warning") as CMlLabel);
+    declare CMlLabel EventId <=> (Page.GetFirstChild("mlid") as CMlLabel);
+    declare Text PrevTime = CurrentLocalDateText;
+    declare Vec3 NextCheckpoint;
+    declare Text FormattedCheckpoint;
+    declare Text FormattedCheckpointNb;
+    while (True) {
+        yield;
+        if (!PageIsVisible || InputPlayer == Null) {
+            continue;
+            log("invisible!");
+        }
+        foreach (Event in RaceEvents) {
+            log("event");
+            if (Event.Type == CTmRaceClientEvent::EType::WayPoint){
+                if(Event.Player == InputPlayer){
+                    NextCheckpoint = GetNearestWaypoint(Event.Player.Position);
+                    FormattedCheckpoint = TextLib::ToText(NextCheckpoint.X)
+                                          ^"_"^TextLib::ToText(NextCheckpoint.Y)
+                                          ^"_"^TextLib::ToText(NextCheckpoint.Z);
+                    FormattedCheckpointNb = TextLib::ToText(Event.CheckpointInRace);
+
+                    TriggerPageAction("{{id}}__checkpoint__"^FormattedCheckpoint^"|"^FormattedCheckpointNb);
+                }
+            }
+        }
+    }
+}
+
