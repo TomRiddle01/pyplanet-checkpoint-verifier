@@ -31,7 +31,6 @@ Vec3 GetNearestWaypoint(Vec3 _PlayerPos) {
 }
 
 main() {
-    log("restartinggggg!!!");
     declare CMlLabel LabelLocalTime <=> (Page.GetFirstChild("warning") as CMlLabel);
     declare CMlLabel EventId <=> (Page.GetFirstChild("mlid") as CMlLabel);
     declare Text PrevTime = CurrentLocalDateText;
@@ -42,10 +41,8 @@ main() {
         yield;
         if (!PageIsVisible || InputPlayer == Null) {
             continue;
-            log("invisible!");
         }
         foreach (Event in RaceEvents) {
-            log("event");
             if (Event.Type == CTmRaceClientEvent::EType::WayPoint){
                 if(Event.Player == InputPlayer){
                     NextCheckpoint = GetNearestWaypoint(Event.Player.Position);
