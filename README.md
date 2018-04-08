@@ -10,3 +10,9 @@ This plugin currently does two things:
 
 
 The first will be moved to a different plugin in the future because other plugins depend on this feature too.
+
+
+
+![Example Image](https://i.imgur.com/j3O48sE.png?1)
+
+See "Checkpoint Verifier"
